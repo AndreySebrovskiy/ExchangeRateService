@@ -1,0 +1,81 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.0'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.mova'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	lombokVersion = '1.18.28'
+	mapstructVersion = '1.5.5.Final'
+	testcontainersVersion = '1.19.0'
+	junitVersion = '5.10.0'
+}
+
+
+dependencies {
+	// Spring Boot dependencies
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	implementation 'org.liquibase:liquibase-core'
+	// Hibernate Types for handling JSON and more
+//	implementation group: 'com.vladmihalcea', name: 'hibernate-types-60', version: '2.21.1'
+
+	implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.7.3'
+
+	// JSON and HTTP handling
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	// PostgreSQL Driver
+	runtimeOnly 'org.postgresql:postgresql'
+
+	// Utils
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.2'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.18.2'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.2'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+	implementation 'commons-io:commons-io:2.18.0'
+	implementation group: 'commons-validator', name: 'commons-validator', version: '1.9.0'
+
+	// Lombok
+	compileOnly "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+	testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+	testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+	// MapStruct
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+	// Test dependencies
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation "org.mockito:mockito-core:5.2.0"
+	testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+
+	// Testcontainers
+	testImplementation 'org.testcontainers:testcontainers:${testcontainersVersion}'
+	testImplementation 'org.testcontainers:postgresql:${testcontainersVersion}'
+	testImplementation 'org.testcontainers:junit-jupiter:${testcontainersVersion}'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

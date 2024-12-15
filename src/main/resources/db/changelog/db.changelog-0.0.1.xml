@@ -1,0 +1,67 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="currency_table" author="andrey.sebrovskiy">
+        <createTable tableName="currency">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="varchar(3)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="exchange_rate_table" author="andrey.sebrovskiy">
+        <createTable tableName="exchange_rate">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="base_currency_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rates" type="jsonb">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dateTime" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="exchange_rate_fk" author="andrey.sebrovskiy">
+        <addForeignKeyConstraint
+                baseTableName="exchange_rate"
+                baseColumnNames="base_currency_id"
+                referencedTableName="currency"
+                referencedColumnNames="id"
+                constraintName="fk_exchange_rate_currency"/>
+    </changeSet>
+
+    <changeSet id="exchange_rate_idxs" author="andrey.sebrovskiy">
+        <createIndex tableName="exchange_rate" indexName="idx_base_currency_id">
+            <column name="base_currency_id"/>
+        </createIndex>
+
+        <createIndex tableName="exchange_rate" indexName="idx_timestamp">
+            <column name="dateTime"/>
+        </createIndex>
+    </changeSet>
+
+   <changeSet id="exchange_rate_gin" author="andrey.sebrovskiy">
+        <sql>
+            CREATE INDEX idx_rates_jsonb ON exchange_rate USING gin (rates);
+        </sql>
+       <rollback>
+           DROP INDEX idx_rates_jsonb;
+       </rollback>
+    </changeSet>
+
+
+</databaseChangeLog>
