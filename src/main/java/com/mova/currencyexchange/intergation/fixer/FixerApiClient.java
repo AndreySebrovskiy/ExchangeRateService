@@ -31,7 +31,7 @@ public class FixerApiClient {
     private String baseUrl;
 
     public ExchangeRateModel fetchExchangeRates(@NonNull final String baseCurrency) {
-        final var url = String.format("%s?access_key=%s", baseUrl + "/latest", apiKey);
+        final var url = String.format("%s?access_key=%s&&base%s", baseUrl + "/latest", apiKey, baseCurrency);
         log.info("Starting fetching rate from: {} for code: {}", baseUrl, baseCurrency);
         final var response = restTemplate.getForObject(url, FixerResponse.class);
 

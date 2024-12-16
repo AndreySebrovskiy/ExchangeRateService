@@ -49,7 +49,7 @@ public class CurrencyRestController {
      */
     @PostMapping
     public CurrencyResponse addCurrency(@RequestBody @Valid final CurrencyRequest request) {
-        return currencyService.create(request.getCode(), request.getName());
+        return currencyService.create(request.getCode().trim(), request.getName().trim());
 
     }
 }
