@@ -20,6 +20,7 @@ PUT http://localhost:8080/api/currencies
 "name": "Dollar"
 }
 
+# Only `EUR` available
 # http://data.fixer.io/api/latest?access_key=052a4123126083f9c812cf977d9af655&base=USD
 `
 {
