@@ -1,5 +1,7 @@
 package com.mova.currencyexchange.model;
 
+import org.springframework.validation.annotation.Validated;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -7,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 
 @Data
+@Validated
 @NoArgsConstructor
 public class CurrencyRequest {
 

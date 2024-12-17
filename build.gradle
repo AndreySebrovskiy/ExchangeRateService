@@ -20,7 +20,6 @@ repositories {
 ext {
 	lombokVersion = '1.18.28'
 	mapstructVersion = '1.5.5.Final'
-	testcontainersVersion = '1.19.0'
 	junitVersion = '5.10.0'
 }
 
@@ -52,8 +51,8 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.2'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
 	implementation 'commons-io:commons-io:2.18.0'
-	implementation group: 'commons-validator', name: 'commons-validator', version: '1.9.0'
-
+//	implementation group: 'commons-validator', name: 'commons-validator', version: '1.9.0'
+	implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
 	// Lombok
 	compileOnly "org.projectlombok:lombok:${lombokVersion}"
 	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
@@ -67,15 +66,15 @@ dependencies {
 	// Test dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation "org.mockito:mockito-core:5.2.0"
-	testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
 
 	// Testcontainers
-	testImplementation 'org.testcontainers:testcontainers:${testcontainersVersion}'
-	testImplementation 'org.testcontainers:postgresql:${testcontainersVersion}'
-	testImplementation 'org.testcontainers:junit-jupiter:${testcontainersVersion}'
+	testImplementation 'org.testcontainers:testcontainers'
+	testImplementation 'org.testcontainers:postgresql'
+	testImplementation 'org.testcontainers:junit-jupiter'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+tasks {
+	test {
+		useJUnitPlatform()
+	}
 }

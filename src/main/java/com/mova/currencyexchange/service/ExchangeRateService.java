@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import com.mova.currencyexchange.cache.ExchangeRateCache;
 import com.mova.currencyexchange.cache.ExchangeRateModel;
 import com.mova.currencyexchange.entity.ExchangeRate;
+import com.mova.currencyexchange.error.EntityNotFoundExistsException;
 import com.mova.currencyexchange.repository.CurrencyRepository;
 import com.mova.currencyexchange.repository.ExchangeRateRepository;
 
@@ -30,9 +31,6 @@ public class ExchangeRateService
 
     public ExchangeRateModel getExchangeRate(@Valid @NotBlank final String baseCurrency)
     {
-        if (baseCurrency.isBlank()) {
-            throw new RuntimeException("Bad Request. baseCurrency must not be blank");
-        }
         final var baseCurrencyCode = baseCurrency.trim();
         // not clear logic what after addNew currency -> fetch immediately?
         final var rateModel = exchangeRateCache.get(baseCurrencyCode);
@@ -42,7 +40,7 @@ public class ExchangeRateService
         }
         else if (currencyRepository.findByCode(baseCurrencyCode).isEmpty())
         {
-            throw new RuntimeException("Currency " + baseCurrencyCode + "is not supported");
+            throw new EntityNotFoundExistsException("Currency " + baseCurrencyCode + " is not supported");
         }
         else
         {

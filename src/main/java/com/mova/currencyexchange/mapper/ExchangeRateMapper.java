@@ -8,12 +8,12 @@ import com.mova.currencyexchange.entity.ExchangeRate;
 import com.mova.currencyexchange.model.ExchangeRateResponse;
 
 
-@Mapper(componentModel = "spring", uses = com.mova.currencyexchange.mapper.CurrencyMapper.class)
+@Mapper(componentModel = "spring", uses = CurrencyMapper.class)
 public interface ExchangeRateMapper
 {
     @Mapping(source = "baseCurrency.code", target = "baseCurrency")
-    ExchangeRateResponse toResponse(ExchangeRate exchangeRate);
+    ExchangeRateResponse fromEntity(ExchangeRate exchangeRate);
 
     @Mapping(source = "baseCurrency", target = "baseCurrency")
-    ExchangeRateResponse toResponse(ExchangeRateModel exchangeRateModel, String baseCurrency);
+    ExchangeRateResponse fromModel(ExchangeRateModel exchangeRateModel, String baseCurrency);
 }

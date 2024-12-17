@@ -1,17 +1,26 @@
 package com.mova.currencyexchange.service;
 
+import static com.mova.currencyexchange.util.TestConstants.EUR;
+import static com.mova.currencyexchange.util.TestConstants.USD;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationEventPublisher;
-
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
 
 import com.mova.currencyexchange.cache.ExchangeRateCache;
 import com.mova.currencyexchange.cache.ExchangeRateModel;
@@ -40,33 +49,29 @@ class CurrencyExchangeManagementServiceTest {
 
     @Test
     void shouldFetchAndStoreExchangeRates() {
-        // Mock data
-        String baseCurrency = "USD";
-        ExchangeRateModel model = new ExchangeRateModel(Map.of("EUR", BigDecimal.valueOf(1.2)), OffsetDateTime.now());
-        when(fixerApiClient.fetchExchangeRates(baseCurrency)).thenReturn(model);
+        // given
+        final var model = new ExchangeRateModel(Map.of(EUR, BigDecimal.valueOf(1.2)), OffsetDateTime.now());
+        when(fixerApiClient.fetchExchangeRates(USD)).thenReturn(model);
 
-        // Run the method
-        managementService.fetchAndStoreExchangeRates(baseCurrency);
+        // when
+        managementService.fetchAndStoreExchangeRates(USD);
 
-        // Verify cache update and event publishing
-        verify(exchangeRateCache, times(1)).put(baseCurrency, model);
+        // then
+        verify(exchangeRateCache, times(1)).put(USD, model);
         verify(eventPublisher, times(1)).publishEvent(any(CreateExchangeRateEvent.class));
     }
 
     @Test
     void shouldHandleApiClientException() {
-        // Mock exception
-        String baseCurrency = "USD";
-        when(fixerApiClient.fetchExchangeRates(baseCurrency)).thenThrow(new RuntimeException("API Failure"));
+        // given
+        when(fixerApiClient.fetchExchangeRates(USD)).thenThrow(new RuntimeException("API Failure"));
 
-        // Run the method
-        try {
-            managementService.fetchAndStoreExchangeRates(baseCurrency);
-        } catch (Exception e) {
-            // Ensure no exception propagates
-        }
+        // when
+        final var exception = assertThrows(RuntimeException.class,
+            () -> managementService.fetchAndStoreExchangeRates(USD));
 
-        // Verify that cache and events are not triggered
+        // then
+        assertEquals("API Failure", exception.getMessage());
         verify(exchangeRateCache, never()).put(anyString(), any());
         verify(eventPublisher, never()).publishEvent(any());
     }

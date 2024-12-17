@@ -1,5 +1,6 @@
 package com.mova.currencyexchange.scheduler;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +13,6 @@ import com.mova.currencyexchange.service.CurrencyExchangeManagementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 /**
  * Scheduler for fetching exchange rates periodically.
  */
@@ -23,10 +23,8 @@ public class ExchangeRateScheduler
 {
     private final CurrencyExchangeManagementService currencyExchangeManagementService;
     private final CurrencyRepository currencyRepository;
-
     @Value("${scheduler.thread.pool.size}")
     private int threadPoolSize;
-
 
     /**
      * Fetches exchange rates for all currencies
@@ -35,7 +33,7 @@ public class ExchangeRateScheduler
     public void updateExchangeRates()
     {
         final var currencies = currencyRepository.findAll();
-        final var executorService = Executors.newFixedThreadPool(threadPoolSize);
+        final ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
 
         try {
             currencies.forEach(currency ->
@@ -44,7 +42,7 @@ public class ExchangeRateScheduler
                     {
                         currencyExchangeManagementService.fetchAndStoreExchangeRates(currency.getCode());
                     }
-                    catch (Exception e)
+                    catch (final Exception e)
                     {
                         log.error("Failed to fetch rates for currency: {}", currency, e);
                     }
@@ -54,5 +52,4 @@ public class ExchangeRateScheduler
             executorService.shutdown();
         }
     }
-
 }

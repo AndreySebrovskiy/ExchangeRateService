@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,21 +35,14 @@ public class CurrencyRestController {
      *
      * @return a list of currency codes
      */
-    @GetMapping("/list")
+    @GetMapping
     public List<CurrencyResponse> getAllCurrencies() {
         return currencyService.getAllCurrencies();
     }
 
     //TODO add validation CurrencyValidator
-    /**
-     * Adds a new currency for tracking.
-     *
-     * @param code the currency code to add
-     * @return a success message
-     */
-    @PostMapping
+    @PutMapping
     public CurrencyResponse addCurrency(@RequestBody @Valid final CurrencyRequest request) {
         return currencyService.create(request.getCode().trim(), request.getName().trim());
-
     }
 }

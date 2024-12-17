@@ -1,5 +1,9 @@
 package com.mova.currencyexchange.cache;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+
 /**
  * ExchangeRate Cache Interface
  * @param <K> base currency
@@ -7,7 +11,7 @@ package com.mova.currencyexchange.cache;
  */
 public interface ExchangeRateCache<K, V>
 {
-    void put(K key, V value);
+    void put(K key, @Valid @NotNull V value);
 
     V get(K key);
 }
