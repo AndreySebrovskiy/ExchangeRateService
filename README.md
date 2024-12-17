@@ -3,7 +3,7 @@ Exchange Rate Service
 
 ServerPort: `8080`
 
-# WILL keep api-key: 052a4123126083f9c812cf977d9af655 for a `week`!
+# WILL keep api-key:  for a `week`!
 
 an Issue with gradle version and test, compatibility
 run `./gradlew clean  build`
