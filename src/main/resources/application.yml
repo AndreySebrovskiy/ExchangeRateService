@@ -4,7 +4,7 @@ server:
 # Fixer.io API Key Configuration
 fixer:
   url: "http://data.fixer.io/api"
-  api-key: 052a4123126083f9c812cf977d9af655
+  api-key: <API_KEY>
 
 scheduler:
   cron: "0 0 * * * ?" # Cron expression for hourly execution
